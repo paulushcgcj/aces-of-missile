@@ -97,7 +97,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Windows-Installer
-          path: Output\install-aom.exe
+          path: tools\Output\install-aom.exe
 
   release:
     name: Release game
