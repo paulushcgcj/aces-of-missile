@@ -73,9 +73,6 @@ jobs:
           name: Game-Build-windows
           path: ./tools/Output/windows
       
-      - name: Check
-        run: ls -la ./tools/Output/windows
-
       - name: Create Release
         run: zip -r Game-Build-windows.zip ./tools/Output/windows
 
@@ -84,10 +81,7 @@ jobs:
         with:
           name: Game-Build-linux
           path: ./tools/Output/linux
-      
-      - name: Check
-        run: ls -la ./tools/Output/linux
-
+            
       - name: Create Release
         run: zip -r Game-Build-linux.zip ./tools/Output/linux
 
@@ -96,20 +90,22 @@ jobs:
         with:
           name: Game-Build-osx-arm
           path: ./tools/Output/mac
-      
-      - name: Check
-        run: ls -la ./tools/Output/mac
-
+            
       - name: Create Release
         run: zip -r Game-Build-mac.zip ./tools/Output/mac
 
-#      - name: Create Release
-#        uses: softprops/action-gh-release@v1
-#        if: ${{ steps.changelog.outputs.tag != '' }}
-#        env:
-#          GITHUB_TOKEN: ${{ github.token }}
-#        with:
-#          token: ${{ github.token }}
-#          tag_name: ${{ steps.changelog.outputs.tag }}
-#          name: ${{ steps.changelog.outputs.tag }}
-#          body: ${{ steps.changelog.outputs.clean_changelog }}
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: ${{ steps.changelog.outputs.tag != '' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          token: ${{ github.token }}
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          name: ${{ steps.changelog.outputs.tag }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
+          files: |            
+            LICENSE
+            Game-Build-windows.zip
+            Game-Build-linux.zip
+            Game-Build-mac.zip
