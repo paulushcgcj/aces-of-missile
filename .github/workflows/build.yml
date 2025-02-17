@@ -68,7 +68,7 @@ jobs:
           git-push: 'true'
       
       - name: Download build.zip
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: Game-Build-windows
           path: ./tools/Output
