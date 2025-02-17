@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using AceOfMissile;
 
 namespace AceOfMissile.Desktop;
 
@@ -10,18 +11,20 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
 
+    private Player _player;
+
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        // Set the window title here
+        
         Window.Title = Assembly.GetExecutingAssembly().GetName().Name.ToString();
     }
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
+        _player = new Player(GraphicsDevice, new Vector2(500, 400), 50f);
 
         base.Initialize();
     }
@@ -38,7 +41,7 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // TODO: Add your update logic here
+        _player.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -46,9 +49,13 @@ public class Game1 : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
+        _spriteBatch.Begin();
 
-        // TODO: Add your drawing code here
 
+        _player.Draw(_spriteBatch);
+
+
+        _spriteBatch.End();
         base.Draw(gameTime);
     }
 }
