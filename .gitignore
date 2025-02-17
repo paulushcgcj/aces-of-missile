@@ -421,3 +421,5 @@ test-results/
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,csharp,monodevelop
+
+tools/Output
