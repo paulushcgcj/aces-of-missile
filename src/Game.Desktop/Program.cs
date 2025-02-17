@@ -1,2 +1,2 @@
-﻿using var game = new Game.Desktop.Game1();
+﻿using var game = new AceOfMissile.Desktop.Game1();
 game.Run();
