@@ -115,9 +115,9 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: ${{ needs.versioning.outputs.tag != '' }}
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.PAT }}
           tag_name: ${{ needs.versioning.outputs.tag }}
           name: ${{ needs.versioning.outputs.tag }}
           body: ${{ needs.versioning.outputs.clean_changelog }}
