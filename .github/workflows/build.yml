@@ -67,14 +67,41 @@ jobs:
           skip-commit: 'false'
           git-push: 'true'
       
-      - name: Download build.zip
+      - name: Download Windows build
         uses: actions/download-artifact@v4
         with:
           name: Game-Build-windows
-          path: ./tools/Output
+          path: ./tools/Output/windows
       
       - name: Check
-        run: ls -la ./tools/Output
+        run: ls -la ./tools/Output/windows
+
+      - name: Create Release
+        run: zip -r Game-Build-windows.zip ./tools/Output/windows
+
+      - name: Download Linux build
+        uses: actions/download-artifact@v4
+        with:
+          name: Game-Build-linux
+          path: ./tools/Output/linux
+      
+      - name: Check
+        run: ls -la ./tools/Output/linux
+
+      - name: Create Release
+        run: zip -r Game-Build-linux.zip ./tools/Output/linux
+
+      - name: Download Mac build
+        uses: actions/download-artifact@v4
+        with:
+          name: Game-Build-osx-arm
+          path: ./tools/Output/mac
+      
+      - name: Check
+        run: ls -la ./tools/Output/mac
+
+      - name: Create Release
+        run: zip -r Game-Build-mac.zip ./tools/Output/mac
 
 #      - name: Create Release
 #        uses: softprops/action-gh-release@v1
