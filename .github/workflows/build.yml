@@ -1,0 +1,48 @@
+name: Build Game
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  build:
+    name: Build game
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set execute permissions for publish.sh (Linux/macOS)        
+        run: chmod +x tools/publish.sh
+
+      - name: Install .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Run the publish script
+        run: tools/publish.sh
+
+      - name: Upload windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Game-Build-windows
+          path: src/Game.Desktop/bin/Release/net8.0/win-x64
+
+      - name: Upload mac artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Game-Build-osx-arm
+          path: src/Game.Desktop/bin/Release/net8.0/osx-arm64
+
+      - name: Upload linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Game-Build-linux
+          path: src/Game.Desktop/bin/Release/net8.0/linux-x64
