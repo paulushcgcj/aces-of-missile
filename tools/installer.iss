@@ -11,7 +11,7 @@ PrivilegesRequired=lowest
 
 ; Specify the files to include
 [Files]
-Source: "..\src\Game.Desktop\bin\Release\net8.0\win-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "artifact\windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; Create a shortcut for the game
 [Icons]

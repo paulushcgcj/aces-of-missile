@@ -48,10 +48,13 @@ jobs:
           name: Game-Build-linux
           path: src/Game.Desktop/bin/Release/net8.0/linux-x64
 
-  release:
-    name: Release game
+  versioning:
+    name: Release versioning
     runs-on: ubuntu-latest
     needs: [build]
+    outputs:
+      tag: ${{ steps.changelog.outputs.tag }}
+      clean_changelog: ${{ steps.changelog.outputs.clean_changelog }}
 
     steps:
       - name: Checkout repository
@@ -67,45 +70,57 @@ jobs:
           skip-commit: 'false'
           git-push: 'true'
       
+  pre-release-windows:
+    name: Pre-release On Windows
+    runs-on: windows-latest
+    needs: [build, versioning]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Download Windows build
         uses: actions/download-artifact@v4
         with:
           name: Game-Build-windows
+          path: ./tools/artifact/windows
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y
+  
+      - name: Generate Installer
+        run: |
+          cd tools
+          iscc installer.iss
+
+      - name: Upload Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows-Installer
+          path: Output\install-aom.exe
+
+  release:
+    name: Release game
+    runs-on: ubuntu-latest
+    needs: [pre-release-windows,versioning]
+
+    steps:
+      - name: Download Windows build
+        uses: actions/download-artifact@v4
+        with:
+          name: Windows-Installer
           path: ./tools/Output/windows
-      
-      - name: Create Zip for Windows
-        run: zip -r Game-Build-windows.zip ./tools/Output/windows
-
-      - name: Download Linux build
-        uses: actions/download-artifact@v4
-        with:
-          name: Game-Build-linux
-          path: ./tools/Output/linux
             
-      - name: Create Zip for Linux
-        run: zip -r Game-Build-linux.zip ./tools/Output/linux
-
-      - name: Download Mac build
-        uses: actions/download-artifact@v4
-        with:
-          name: Game-Build-osx-arm
-          path: ./tools/Output/mac
-            
-      - name: Create Zip for Mac
-        run: zip -r Game-Build-mac.zip ./tools/Output/mac
-
       - name: Create Release
         uses: softprops/action-gh-release@v1
-        if: ${{ steps.changelog.outputs.tag != '' }}
+        if: ${{ needs.versioning.outputs.tag != '' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           token: ${{ github.token }}
-          tag_name: ${{ steps.changelog.outputs.tag }}
-          name: ${{ steps.changelog.outputs.tag }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
+          tag_name: ${{ needs.versioning.outputs.tag }}
+          name: ${{ needs.versioning.outputs.tag }}
+          body: ${{ needs.versioning.outputs.clean_changelog }}
           files: |            
             LICENSE
-            Game-Build-windows.zip
-            Game-Build-linux.zip
-            Game-Build-mac.zip
+            ./tools/Output/windows/install-aom.exe
