@@ -67,7 +67,7 @@ jobs:
           github-token: ${{ github.token }}
           output-file: 'CHANGELOG.md'
           skip-version-file: 'true'
-          skip-commit: 'false'
+          skip-commit: 'true'
           git-push: 'true'
       
   pre-release-windows:
