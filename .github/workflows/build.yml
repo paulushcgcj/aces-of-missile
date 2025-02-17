@@ -10,30 +10,10 @@ on:
   workflow_dispatch: # Allows manual triggering
 
 jobs:
-  semantic-pr:
-    name: Enforce Conventional Commits
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check PR title for Conventional Commits compliance
-        uses: amannn/action-semantic-pull-request@v5.5.3
-        with:
-          types: |
-            feat
-            fix
-            chore
-            refactor
-            perf
-            docs
-            test
-            build
-            ci
-          requireScope: false # Change to true if you want a scope (e.g., `feat(core): new feature`)
-
 
   build:
     name: Build game
-    runs-on: ubuntu-latest
-    needs: [semantic-pr] # Ensures PRs are validated before builds
+    runs-on: ubuntu-latest    
 
     steps:
       - name: Checkout repository
