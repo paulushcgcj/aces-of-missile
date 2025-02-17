@@ -73,7 +73,7 @@ jobs:
           name: Game-Build-windows
           path: ./tools/Output/windows
       
-      - name: Create Release
+      - name: Create Zip for Windows
         run: zip -r Game-Build-windows.zip ./tools/Output/windows
 
       - name: Download Linux build
@@ -82,7 +82,7 @@ jobs:
           name: Game-Build-linux
           path: ./tools/Output/linux
             
-      - name: Create Release
+      - name: Create Zip for Linux
         run: zip -r Game-Build-linux.zip ./tools/Output/linux
 
       - name: Download Mac build
@@ -91,7 +91,7 @@ jobs:
           name: Game-Build-osx-arm
           path: ./tools/Output/mac
             
-      - name: Create Release
+      - name: Create Zip for Mac
         run: zip -r Game-Build-mac.zip ./tools/Output/mac
 
       - name: Create Release
