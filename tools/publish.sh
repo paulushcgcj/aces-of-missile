@@ -1,13 +1,19 @@
 #!/bin/bash
 set -e
+if [[ "$(pwd)" == */tools ]]; then
+  REF_FOLDER="../"
+else
+  REF_FOLDER="./"
+fi
+
 
 GAME_NAME="Ace of Missile"
-GAME_DIR="../src/Game.Desktop"
+GAME_DIR="$REF_FOLDER/src/Game.Desktop"
 BUILD_DIR="bin/Release/net8.0"
 PUBLISH_DIR="$BUILD_DIR/publish"
 
 # Navigate to the project folder
-cd ../src/Game.Desktop
+cd $REF_FOLDER/src/Game.Desktop
 
 # Clean previous builds
 dotnet clean
