@@ -10,9 +10,30 @@ on:
   workflow_dispatch: # Allows manual triggering
 
 jobs:
+  semantic-pr:
+    name: Enforce Conventional Commits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR title for Conventional Commits compliance
+        uses: amannn/action-semantic-pull-request@v5.5.3
+        with:
+          types: |
+            feat
+            fix
+            chore
+            refactor
+            perf
+            docs
+            test
+            build
+            ci
+          requireScope: false # Change to true if you want a scope (e.g., `feat(core): new feature`)
+
+
   build:
     name: Build game
     runs-on: ubuntu-latest
+    needs: [semantic-pr] # Ensures PRs are validated before builds
 
     steps:
       - name: Checkout repository
@@ -46,3 +67,42 @@ jobs:
         with:
           name: Game-Build-linux
           path: src/Game.Desktop/bin/Release/net8.0/linux-x64
+
+  release:
+    name: Release game
+    runs-on: ubuntu-latest
+    needs: [build]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Conventional Changelog Update
+        uses: TriPSs/conventional-changelog-action@v3
+        id: changelog
+        with:
+          github-token: ${{ github.token }}
+          output-file: 'CHANGELOG.md'
+          skip-version-file: 'true'
+          skip-commit: 'false'
+          git-push: 'true'
+      
+      - name: Download build.zip
+        uses: actions/download-artifact@v3
+        with:
+          name: Game-Build-windows
+          path: ./tools/Output
+      
+      - name: Check
+        run: ls -la ./tools/Output
+
+#      - name: Create Release
+#        uses: softprops/action-gh-release@v1
+#        if: ${{ steps.changelog.outputs.tag != '' }}
+#        env:
+#          GITHUB_TOKEN: ${{ github.token }}
+#        with:
+#          token: ${{ github.token }}
+#          tag_name: ${{ steps.changelog.outputs.tag }}
+#          name: ${{ steps.changelog.outputs.tag }}
+#          body: ${{ steps.changelog.outputs.clean_changelog }}
