@@ -68,7 +68,7 @@ jobs:
           output-file: 'CHANGELOG.md'
           skip-version-file: 'true'
           skip-commit: 'true'
-          git-push: 'true'
+          git-push: 'false'
       
   pre-release-windows:
     name: Pre-release On Windows
